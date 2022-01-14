@@ -189,7 +189,7 @@ struct Encoding<std::array<T, Length>, EnableIfIntegral<T>>
     if (!status)
       return status;
 
-    return writer->Write(value.begin(), value.end());
+    return writer->Write(&value[0], &value[Length]);
   }
 
   template <typename Reader>

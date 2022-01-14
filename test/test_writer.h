@@ -23,7 +23,6 @@
 
 #include <nop/base/encoding.h>
 #include <nop/base/utility.h>
-#include <nop/types/file_handle.h>
 
 namespace nop {
 
