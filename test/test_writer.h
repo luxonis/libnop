@@ -51,14 +51,14 @@ class TestWriter {
     const std::size_t start_offset = data_.size();
     data_.resize(start_offset + length_bytes);
 
-    std::copy(begin_byte, end_byte, &data_[start_offset]);
+    std::copy(begin_byte, end_byte, &data_[0] + start_offset);
     return {};
   }
 
   Status<void> Skip(std::size_t padding_bytes,
                     std::uint8_t padding_value = 0x00) {
     std::vector<std::uint8_t> padding(padding_bytes, padding_value);
-    return Write(&*padding.begin(), &*padding.end());
+    return Write(padding.data(), padding.data() + padding.size());
   }
 
   template <typename HandleType>

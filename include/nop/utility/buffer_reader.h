@@ -57,7 +57,7 @@ class BufferReader {
 
   template <typename T, typename Enable = EnableIfArithmetic<T>>
   Status<void> Read(T* begin, T* end) {
-    const std::size_t element_size = sizeof(T);
+    constexpr std::size_t element_size = sizeof(T);
     const std::size_t length = end - begin;
     const std::size_t length_bytes = length * element_size;
 

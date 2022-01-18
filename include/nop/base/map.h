@@ -48,7 +48,7 @@ struct Encoding<std::map<Key, T, Compare, Allocator>>
     return BaseEncodingSize(Prefix(value)) +
            Encoding<SizeType>::Size(value.size()) +
            std::accumulate(
-               value.cbegin(), value.cend(), 0U,
+               value.cbegin(), value.cend(), static_cast<size_t>(0),
                [](const std::size_t& sum, const std::pair<Key, T>& element) {
                  return sum + Encoding<Key>::Size(element.first) +
                         Encoding<T>::Size(element.second);
@@ -120,7 +120,7 @@ struct Encoding<std::unordered_map<Key, T, Hash, KeyEqual, Allocator>>
     return BaseEncodingSize(Prefix(value)) +
            Encoding<SizeType>::Size(value.size()) +
            std::accumulate(
-               value.cbegin(), value.cend(), 0U,
+               value.cbegin(), value.cend(), static_cast<size_t>(0),
                [](const std::size_t& sum, const std::pair<Key, T>& element) {
                  return sum + Encoding<Key>::Size(element.first) +
                         Encoding<T>::Size(element.second);

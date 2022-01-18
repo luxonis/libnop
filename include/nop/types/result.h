@@ -77,7 +77,7 @@ class Result {
       : error_{ErrorEnum::None}, state_{State::Empty} {
     *this = other;
   }
-  constexpr Result(Result&& other)
+  constexpr Result(Result&& other) noexcept
       : error_{ErrorEnum::None}, state_{State::Empty} {
     *this = std::move(other);
   }
@@ -96,7 +96,7 @@ class Result {
     }
     return *this;
   }
-  constexpr Result& operator=(Result&& other) {
+  constexpr Result& operator=(Result&& other) noexcept {
     if (this != &other) {
       if (other.has_value())
         Assign(std::move(other.value_));
@@ -199,7 +199,9 @@ class Result<ErrorEnum, void> {
   constexpr Result() : error_{ErrorEnum::None} {}
   constexpr Result(ErrorEnum error) : error_{error} {}
   constexpr Result(const Result& other) : error_{other.error_} {}
-  constexpr Result(Result&& other) : error_{other.error_} { other.clear(); }
+  constexpr Result(Result&& other) noexcept : error_{other.error_} {
+    other.clear();
+  }
 
   ~Result() = default;
 
@@ -209,7 +211,7 @@ class Result<ErrorEnum, void> {
     }
     return *this;
   }
-  constexpr Result& operator=(Result&& other) {
+  constexpr Result& operator=(Result&& other) noexcept {
     if (this != &other) {
       error_ = other.error_;
       other.clear();

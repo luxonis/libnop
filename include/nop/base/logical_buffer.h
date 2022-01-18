@@ -97,8 +97,13 @@ struct Encoding<
 
   static constexpr std::size_t Size(const Type& value) {
     std::size_t element_size_sum = 0;
-    for (const ValueType& element : value)
-      element_size_sum += Encoding<ValueType>::Size(element);
+
+    SizeType size = static_cast<SizeType>(value.size());
+    if (!IsUnbounded && size > Length)
+      size = Length;
+
+    for (SizeType i = 0; i < size; i++)
+      element_size_sum += Encoding<ValueType>::Size(value[i]);
 
     return BaseEncodingSize(Prefix(value)) +
            Encoding<SizeType>::Size(value.size()) + element_size_sum;

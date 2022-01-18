@@ -64,7 +64,7 @@ class TestReader {
 
   Status<void> Skip(std::size_t padding_bytes) {
     std::vector<std::uint8_t> padding(padding_bytes);
-    return Read(&*padding.begin(), &*padding.end());
+    return Read(padding.data(), padding.data() + padding.size());
   }
 
   template <typename HandleType>
