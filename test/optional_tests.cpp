@@ -297,7 +297,12 @@ TEST(Optional, Assignment) {
     v2 = v1;
     ASSERT_FALSE(v1.empty());
     ASSERT_FALSE(v2.empty());
-    EXPECT_EQ("test", v1.get());
+    // "The compiler is allowed, but not required, to combine storage for equal
+    // or overlapping string literals. That means that identical string literals
+    // may or may not compare equal when compared by pointer." 
+    // EXPECT_EQ("test", v1.get()); 
+    // Replaced with a comparison instead
+    ASSERT_TRUE(std::string("test") == v1.get());
     EXPECT_EQ("test", v2.get());
   }
 

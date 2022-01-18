@@ -15,7 +15,6 @@ macro(nop_add_test test_name test_src)
 endmacro()
 
 # Tests
-nop_add_test(constexpr_tests constexpr_tests.cpp)
 nop_add_test(encoding_tests encoding_tests.cpp)
 nop_add_test(endian_tests endian_tests.cpp)
 nop_add_test(enum_flags_tests enum_flags_tests.cpp)
@@ -30,7 +29,9 @@ nop_add_test(thread_local_tests thread_local_tests.cpp)
 nop_add_test(utility_tests utility_tests.cpp)
 nop_add_test(variant_tests variant_tests.cpp)
 
-# Unix tests
-if(UNIX)
+# Unix/Apple tests
+if(UNIX OR APPLE)
     nop_add_test(handle_tests handle_tests.cpp)
+    # TODO(themarpe) - fix to work with MSVC as well
+    nop_add_test(constexpr_tests constexpr_tests.cpp)
 endif()

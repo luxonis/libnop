@@ -1229,7 +1229,12 @@ TEST(Variant, IfAnyOf) {
     std::string s = "bar";
     EXPECT_TRUE((IfAnyOf<std::string, const char*>::Take(&v, &s)));
     ASSERT_TRUE(v.is<const char*>());
-    EXPECT_EQ("foo", std::get<const char*>(v));
+    // "The compiler is allowed, but not required, to combine storage for equal
+    // or overlapping string literals. That means that identical string literals
+    // may or may not compare equal when compared by pointer." 
+    // EXPECT_EQ("foo", std::get<const char*>(v));
+    // Replaced with a comparison instead
+    ASSERT_TRUE(std::string("foo") == std::get<const char*>(v));
     EXPECT_EQ("foo", s);
 
     v = std::string("bar");

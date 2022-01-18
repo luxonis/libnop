@@ -244,7 +244,7 @@ struct InterfaceMethod {
     template <typename Sender>
     static void Invoke(Sender* sender, Status<Return>* return_value,
                        Args... args) {
-      sender->template SendMethod(InterfaceMethod::Selector, return_value,
+      sender->SendMethod(InterfaceMethod::Selector, return_value,
                                   std::forward_as_tuple(args...));
     }
 
