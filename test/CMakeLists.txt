@@ -1,6 +1,10 @@
 # GTest and GMock
 set(GMOCK_VER "1.11.0")
 set(GMOCK_ROOT ${CMAKE_CURRENT_BINARY_DIR}/gmock)
+# Use static libs if MSVC
+if(MSVC)
+    set(GTEST_USE_STATIC_LIBS ON)
+endif()
 find_package(GMock REQUIRED)
 
 # Helper 'nop_add_test'
@@ -11,12 +15,10 @@ macro(nop_add_test test_name test_src)
 endmacro()
 
 # Tests
-nop_add_test(constexpr_tests constexpr_tests.cpp)
 nop_add_test(encoding_tests encoding_tests.cpp)
 nop_add_test(endian_tests endian_tests.cpp)
 nop_add_test(enum_flags_tests enum_flags_tests.cpp)
 nop_add_test(fungible_tests fungible_tests.cpp)
-nop_add_test(handle_tests handle_tests.cpp)
 nop_add_test(interface_tests interface_tests.cpp)
 nop_add_test(nop_tests nop_tests.cpp)
 nop_add_test(optional_tests optional_tests.cpp)
@@ -26,3 +28,10 @@ nop_add_test(sip_hash_tests sip_hash_tests.cpp)
 nop_add_test(thread_local_tests thread_local_tests.cpp)
 nop_add_test(utility_tests utility_tests.cpp)
 nop_add_test(variant_tests variant_tests.cpp)
+
+# Unix/Apple tests
+if(UNIX OR APPLE)
+    nop_add_test(handle_tests handle_tests.cpp)
+    # TODO(themarpe) - fix to work with MSVC as well
+    nop_add_test(constexpr_tests constexpr_tests.cpp)
+endif()

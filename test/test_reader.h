@@ -57,14 +57,14 @@ class TestReader {
     if (length_bytes > (data_.size() - index_))
       return ErrorStatus::ReadLimitReached;
 
-    std::copy(&data_[index_], &data_[index_ + length_bytes], begin_byte);
+    std::copy(data_.begin() + index_, data_.begin() + index_ + length_bytes, begin_byte);
     index_ += length_bytes;
     return {};
   }
 
   Status<void> Skip(std::size_t padding_bytes) {
     std::vector<std::uint8_t> padding(padding_bytes);
-    return Read(&*padding.begin(), &*padding.end());
+    return Read(padding.data(), padding.data() + padding.size());
   }
 
   template <typename HandleType>

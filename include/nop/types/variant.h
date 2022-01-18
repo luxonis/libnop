@@ -22,6 +22,7 @@
 #include <type_traits>
 
 #include <nop/types/detail/variant.h>
+#include <nop/utility/compiler.h>
 
 namespace nop {
 
@@ -238,7 +239,7 @@ class Variant {
   // resulting type.
   template <typename... Args>
   void Construct(Args&&... args) {
-    index_ = value_.template Construct(std::forward<Args>(args)...);
+    index_ = value_.NOP_TEMPLATE Construct(std::forward<Args>(args)...);
   }
   void Construct(EmptyVariant) {}
 
@@ -255,14 +256,14 @@ class Variant {
   // multiple element types.
   template <typename T, typename U>
   void Assign(TypeTag<T>, U&& value) {
-    if (!value_.template Assign(TypeTag<T>{}, index_, std::forward<U>(value))) {
+    if (!value_.NOP_TEMPLATE Assign(TypeTag<T>{}, index_, std::forward<U>(value))) {
       Destruct();
       Construct(TypeTag<T>{}, std::forward<U>(value));
     }
   }
   template <typename T>
   void Assign(T&& value) {
-    if (!value_.template Assign(index_, std::forward<T>(value))) {
+    if (!value_.NOP_TEMPLATE Assign(index_, std::forward<T>(value))) {
       Destruct();
       Construct(std::forward<T>(value));
     }
@@ -290,14 +291,14 @@ struct IfAnyOf {
   template <typename Op, typename... Types>
   static bool Call(Variant<Types...>* variant, Op&& op) {
     static_assert(
-        detail::Set<Types...>::template IsSubset<ValidTypes...>::value,
+        detail::Set<Types...>::NOP_TEMPLATE IsSubset<ValidTypes...>::value,
         "ValidTypes may only contain element types from the Variant.");
     return variant->Visit(CallOp<Op>{std::forward<Op>(op)});
   }
   template <typename Op, typename... Types>
   static bool Call(const Variant<Types...>* variant, Op&& op) {
     static_assert(
-        detail::Set<Types...>::template IsSubset<ValidTypes...>::value,
+        detail::Set<Types...>::NOP_TEMPLATE IsSubset<ValidTypes...>::value,
         "ValidTypes may only contain element types from the Variant.");
     return variant->Visit(CallOp<Op>{std::forward<Op>(op)});
   }
@@ -356,30 +357,30 @@ namespace std {
 
 template <typename T, typename... Types>
 inline T& get(::nop::Variant<Types...>& v) {
-  return *v.template get<T>();
+  return *v.NOP_TEMPLATE get<T>();
 }
 template <typename T, typename... Types>
 inline T&& get(::nop::Variant<Types...>&& v) {
-  return std::move(*v.template get<T>());
+  return std::move(*v.NOP_TEMPLATE get<T>());
 }
 template <typename T, typename... Types>
 inline const T& get(const ::nop::Variant<Types...>& v) {
-  return *v.template get<T>();
+  return *v.NOP_TEMPLATE get<T>();
 }
 template <std::size_t I, typename... Types>
 inline ::nop::detail::TypeForIndex<I, Types...>& get(
     ::nop::Variant<Types...>& v) {
-  return *v.template get<I>();
+  return *v.NOP_TEMPLATE get<I>();
 }
 template <std::size_t I, typename... Types>
 inline ::nop::detail::TypeForIndex<I, Types...>&& get(
     ::nop::Variant<Types...>&& v) {
-  return std::move(*v.template get<I>());
+  return std::move(*v.NOP_TEMPLATE get<I>());
 }
 template <std::size_t I, typename... Types>
 inline const ::nop::detail::TypeForIndex<I, Types...>& get(
     const ::nop::Variant<Types...>& v) {
-  return *v.template get<I>();
+  return *v.NOP_TEMPLATE get<I>();
 }
 
 }  // namespace std

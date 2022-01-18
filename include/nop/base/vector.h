@@ -59,7 +59,7 @@ struct Encoding<std::vector<T, Allocator>, EnableIfNotIntegral<T>>
   static constexpr std::size_t Size(const Type& value) {
     return BaseEncodingSize(Prefix(value)) +
            Encoding<SizeType>::Size(value.size()) +
-           std::accumulate(value.cbegin(), value.cend(), 0U,
+           std::accumulate(value.cbegin(), value.cend(), static_cast<size_t>(0),
                            [](const std::size_t& sum, const T& element) {
                              return sum + Encoding<T>::Size(element);
                            });

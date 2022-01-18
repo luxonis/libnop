@@ -195,7 +195,7 @@ template <typename T>
 std::unique_ptr<TestJ<T>, decltype(&std::free)> MakeTestJ(
     std::size_t capacity) {
   return {static_cast<TestJ<T>*>(
-              std::calloc(1, offsetof(TestJ<T>, data) + capacity)),
+              std::calloc(1, offsetof(TestJ<T>, data) + capacity * sizeof(T))),
           &std::free};
 }
 

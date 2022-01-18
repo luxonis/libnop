@@ -29,6 +29,7 @@
 #include <nop/traits/function_traits.h>
 #include <nop/types/variant.h>
 #include <nop/utility/sip_hash.h>
+#include <nop/utility/compiler.h>
 
 namespace nop {
 
@@ -244,7 +245,7 @@ struct InterfaceMethod {
     template <typename Sender>
     static void Invoke(Sender* sender, Status<Return>* return_value,
                        Args... args) {
-      sender->template SendMethod(InterfaceMethod::Selector, return_value,
+      sender->NOP_TEMPLATE SendMethod(InterfaceMethod::Selector, return_value,
                                   std::forward_as_tuple(args...));
     }
 

@@ -189,7 +189,7 @@ struct Encoding<std::array<T, Length>, EnableIfIntegral<T>>
     if (!status)
       return status;
 
-    return writer->Write(value.begin(), value.end());
+    return writer->Write(&value[0], &value[0] + Length);
   }
 
   template <typename Reader>
@@ -202,7 +202,7 @@ struct Encoding<std::array<T, Length>, EnableIfIntegral<T>>
     else if (size != Length * sizeof(T))
       return ErrorStatus::InvalidContainerLength;
 
-    return reader->Read(&(*value)[0], &(*value)[Length]);
+    return reader->Read(&(*value)[0], &(*value)[0] + Length);
   }
 };
 
@@ -245,7 +245,7 @@ struct Encoding<T[Length], EnableIfIntegral<T>> : EncodingIO<T[Length]> {
     else if (size != Length * sizeof(T))
       return ErrorStatus::InvalidContainerLength;
 
-    return reader->Read(&(*value)[0], &(*value)[Length]);
+    return reader->Read(&(*value)[0], &(*value)[0] + Length);
   }
 };
 
