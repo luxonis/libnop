@@ -23,15 +23,6 @@ target_include_directories(${TARGET_NAME} INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-# Check if MSVC and add a conforming preprocessor flag (libnop serialization macros)
-if (MSVC)
-    if(MSVC_VERSION LESS 1925)
-        target_compile_options(${TARGET_NAME} INTERFACE "/experimental:preprocessor")
-    else()
-        target_compile_options(${TARGET_NAME} INTERFACE "/Zc:preprocessor")
-    endif()
-endif()
-
 # Tests
 if(LIBNOP_BUILD_TESTS)
     # Add CMake testing infrastructure
