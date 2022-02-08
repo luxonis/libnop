@@ -9,9 +9,22 @@ find_package(GMock REQUIRED)
 
 # Helper 'nop_add_test'
 macro(nop_add_test test_name test_src)
+    # Add regular test
     add_executable(${test_name} ${test_src})
     target_link_libraries(${test_name} ${TARGET_NAME} GTest::Main GTest::GTest GMock::GMock)
     add_test(${test_name} ${test_name})
+    
+    # Check if MSVC and add a conforming preprocessor test (serialization macros)
+    if (MSVC)
+        add_executable(${test_name}_conforming ${test_src})
+        target_link_libraries(${test_name}_conforming ${TARGET_NAME} GTest::Main GTest::GTest GMock::GMock)
+        if(MSVC_VERSION LESS 1925)
+            target_compile_options(${test_name}_conforming INTERFACE "/experimental:preprocessor")
+        else()
+            target_compile_options(${test_name}_conforming INTERFACE "/Zc:preprocessor")
+        endif()
+        add_test(${test_name}_conforming ${test_name}_conforming)
+    endif()
 endmacro()
 
 # Tests
