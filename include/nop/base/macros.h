@@ -19,10 +19,9 @@
 
 // Macros to apply other macros over all elements in a list.
 
-// Deffered macro expansion
-#ifndef DEFFERED_EXPAND
-#define DEFFERED_EXPAND(x) x
-#ifdef _MSC_VER
+#define NOP_DEFERRED_EXPAND(x) x
+#if !defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL
+// Logic using the traditional preprocessor
 // This is for suppressing false positive warnings when compiling
 // without /Zc:preprocessor
 #pragma warning( disable : 4003)
@@ -57,9 +56,9 @@
 // Returns the second argument of a list.
 #define _NOP_SECOND_ARG(_, second, ...) second
 
-#define _NOP_CAT(a, ...) DEFFERED_EXPAND(a##__VA_ARGS__)
+#define _NOP_CAT(a, ...) NOP_DEFERRED_EXPAND(a##__VA_ARGS__)
 
-#define _NOP_IS_PROBE(...) DEFFERED_EXPAND(_NOP_SECOND_ARG(__VA_ARGS__, 0))
+#define _NOP_IS_PROBE(...) NOP_DEFERRED_EXPAND(_NOP_SECOND_ARG(__VA_ARGS__, 0))
 #define _NOP_PROBE() ~, 1
 
 #define _NOP_IS_PAREN(...) _NOP_IS_PROBE(_NOP_IS_PAREN_PROBE __VA_ARGS__)
