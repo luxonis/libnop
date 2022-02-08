@@ -22,6 +22,10 @@
 // Deffered macro expansion
 #ifndef DEFFERED_EXPAND
 #define DEFFERED_EXPAND(x) x
+#ifdef _MSC_VER
+// This is for suppressing false positive warnings when compiling
+// without /Zc:preprocessor
+#pragma warning( disable : 4003)
 #endif
 
 // Recursive expansion macros.
