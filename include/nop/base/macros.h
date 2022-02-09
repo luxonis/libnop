@@ -20,11 +20,11 @@
 // Macros to apply other macros over all elements in a list.
 
 #define NOP_DEFERRED_EXPAND(x) x
-#if !defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL
-// Logic using the traditional preprocessor
-// This is for suppressing false positive warnings when compiling
-// without /Zc:preprocessor
-#pragma warning( disable : 4003)
+#if defined(_MSC_VER) && (!defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL)
+  // Logic using the traditional preprocessor
+  // This is for suppressing false positive warnings when compiling
+  // without /Zc:preprocessor
+  #pragma warning(disable : 4003)
 #endif
 
 // Recursive expansion macros.
