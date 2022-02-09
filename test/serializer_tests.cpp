@@ -1814,7 +1814,7 @@ TEST(Deserializer, char) {
   EXPECT_EQ('\xff', value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -1891,7 +1891,7 @@ TEST(Deserializer, uint8_t) {
   EXPECT_EQ(0xffU, value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -1996,7 +1996,7 @@ TEST(Deserializer, uint16_t) {
   EXPECT_EQ(0xffffU, value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -2129,7 +2129,7 @@ TEST(Deserializer, uint32_t) {
   EXPECT_EQ(0xffffffffU, value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -2292,7 +2292,7 @@ TEST(Deserializer, uint64_t) {
   EXPECT_EQ(0xffffffffffffffffLLU, value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -2397,7 +2397,7 @@ TEST(Deserializer, int8_t) {
   EXPECT_EQ(127, value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -2530,7 +2530,7 @@ TEST(Deserializer, int16_t) {
   EXPECT_EQ(std::numeric_limits<int16_t>::max(), value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -2691,7 +2691,7 @@ TEST(Deserializer, int32_t) {
   EXPECT_EQ(std::numeric_limits<int32_t>::max(), value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -2888,7 +2888,7 @@ TEST(Deserializer, int64_t) {
   EXPECT_EQ(std::numeric_limits<int64_t>::max(), value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -3061,7 +3061,7 @@ TEST(Deserializer, size_t) {
   EXPECT_EQ(ErrorStatus::ReadLimitReached, status.error());
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -3122,7 +3122,7 @@ TEST(Deserializer, float) {
   EXPECT_EQ(std::numeric_limits<float>::max(), value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -3183,7 +3183,7 @@ TEST(Deserializer, double) {
   EXPECT_EQ(std::numeric_limits<double>::max(), value);
 
   // TODO(eieio): Test rejection of all other encoding prefix bytes.
-  reader.Set(Compose(EncodingByte::Nil));
+  reader.Set(Compose(EncodingByte::Empty));
   status = deserializer.Read(&value);
   ASSERT_FALSE(status);
   EXPECT_EQ(ErrorStatus::UnexpectedEncodingType, status.error());
@@ -7315,7 +7315,7 @@ TEST(Serializer, Variant) {
 
     expected = Compose(EncodingByte::Variant, 0, 10, EncodingByte::Variant, 1,
                        EncodingByte::String, 3, "foo", EncodingByte::Variant,
-                       -1, EncodingByte::Nil);
+                       -1, EncodingByte::Empty);
     EXPECT_EQ(expected, writer.data());
     writer.clear();
   }
@@ -7329,7 +7329,7 @@ TEST(Serializer, Variant) {
 
     expected = Compose(EncodingByte::Array, 3, EncodingByte::Variant, 0, 10,
                        EncodingByte::Variant, 1, EncodingByte::String, 3, "foo",
-                       EncodingByte::Variant, -1, EncodingByte::Nil);
+                       EncodingByte::Variant, -1, EncodingByte::Empty);
     EXPECT_EQ(expected, writer.data());
     writer.clear();
   }
@@ -7346,7 +7346,7 @@ TEST(Deserializer, Variant) {
 
     reader.Set(Compose(EncodingByte::Variant, 0, 10, EncodingByte::Variant, 1,
                        EncodingByte::String, 3, "foo", EncodingByte::Variant,
-                       -1, EncodingByte::Nil));
+                       -1, EncodingByte::Empty));
 
     ASSERT_TRUE(deserializer.Read(&value_a));
     ASSERT_TRUE(deserializer.Read(&value_b));

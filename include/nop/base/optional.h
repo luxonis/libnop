@@ -27,9 +27,9 @@ namespace nop {
 //
 // Empty Optional<T>:
 //
-// +-----+
-// | NIL |
-// +-----+
+// +-------+
+// | EMPTY |
+// +-------+
 //
 // Non-empty Optional<T>
 //
@@ -45,16 +45,16 @@ struct Encoding<Optional<T>> : EncodingIO<Optional<T>> {
   using Type = Optional<T>;
 
   static constexpr EncodingByte Prefix(const Type& value) {
-    return value ? Encoding<T>::Prefix(value.get()) : EncodingByte::Nil;
+    return value ? Encoding<T>::Prefix(value.get()) : EncodingByte::Empty;
   }
 
   static constexpr std::size_t Size(const Type& value) {
     return value ? Encoding<T>::Size(value.get())
-                 : BaseEncodingSize(EncodingByte::Nil);
+                 : BaseEncodingSize(EncodingByte::Empty);
   }
 
   static constexpr bool Match(EncodingByte prefix) {
-    return prefix == EncodingByte::Nil || Encoding<T>::Match(prefix);
+    return prefix == EncodingByte::Empty || Encoding<T>::Match(prefix);
   }
 
   template <typename Writer>
@@ -69,7 +69,7 @@ struct Encoding<Optional<T>> : EncodingIO<Optional<T>> {
   template <typename Reader>
   static constexpr Status<void> ReadPayload(EncodingByte prefix, Type* value,
                                   Reader* reader) {
-    if (prefix == EncodingByte::Nil) {
+    if (prefix == EncodingByte::Empty) {
       value->clear();
     } else {
       T temp;

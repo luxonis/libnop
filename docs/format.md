@@ -78,7 +78,7 @@ array           | ARY    | 10111010 | 0xba        | Variable-sized collection of
 map             | MAP    | 10111011 | 0xbb        | Variable-sized collection of key/value (object/object) pairs.
 binary          | BIN    | 10111100 | 0xbc        | Variable-sized binary blob.
 string          | STR    | 10111101 | 0xbd        | Variable-sized string.
-nil             | NIL    | 10111110 | 0xbe        | Nil / empty / none.
+empty           | EMP    | 10111110 | 0xbe        | Nil / empty / none.
 extension       | EXT    | 10111111 | 0xbf        | Extension type with unsigned integer extension code.
 negative fixint | NEG    | 11xxxxxx | 0xc0 - 0xff | Negative integer with embedded value in the range of [-64, -1].
 
@@ -387,13 +387,13 @@ I    = zero-based element type index or -1 for empty
 VAR = |  0xb8  | INT64  | ELEMENT I |
       +--------+========+===========+
 
-When the variant is empty the element value is NIL.
+When the variant is empty the element value is EMPTY.
 
 Empty variant:
 
-      +--------+========+========+
-VAR = |  0xb8  |   -1   |  NIL   |
-      +--------+========+========+
+      +--------+========+=========+
+VAR = |  0xb8  |   -1   |  EMPTY  |
+      +--------+========+=========+
 ```
 
 ### Handle

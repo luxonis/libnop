@@ -33,21 +33,21 @@ namespace nop {
 //
 // EmptyVariant encoding format:
 //
-// +-----+
-// | NIL |
-// +-----+
+// +-------+
+// | EMPTY |
+// +-------+
 //
 // Therefore a Variant in the empty state has this specific encoding:
 //
-// +-----+----+-----+
-// | VAR | -1 | NIL |
-// +-----+----+-----+
+// +-----+----+-------+
+// | VAR | -1 | EMPTY |
+// +-----+----+-------+
 //
 
 template <>
 struct Encoding<EmptyVariant> : EncodingIO<EmptyVariant> {
   static constexpr EncodingByte Prefix(EmptyVariant /*value*/) {
-    return EncodingByte::Nil;
+    return EncodingByte::Empty;
   }
 
   static constexpr std::size_t Size(EmptyVariant value) {
@@ -55,7 +55,7 @@ struct Encoding<EmptyVariant> : EncodingIO<EmptyVariant> {
   }
 
   static constexpr bool Match(EncodingByte prefix) {
-    return prefix == EncodingByte::Nil;
+    return prefix == EncodingByte::Empty;
   }
 
   template <typename Writer>

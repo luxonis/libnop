@@ -59,7 +59,7 @@ inline constexpr std::size_t BaseEncodingSize(EncodingByte prefix) {
     case EncodingByte::Map:
     case EncodingByte::Binary:
     case EncodingByte::String:
-    case EncodingByte::Nil:
+    case EncodingByte::Empty:
     case EncodingByte::Extension:
       return 1U;
 

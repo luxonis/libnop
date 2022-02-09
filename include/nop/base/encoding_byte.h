@@ -81,8 +81,8 @@ enum class EncodingByte : std::uint8_t {
   // String types.
   String = 0xbd,
 
-  // Nil type.
-  Nil = 0xbe,
+  // Empty type.
+  Empty = 0xbe,
 
   // Extended type.
   Extension = 0xbf,
