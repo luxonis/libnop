@@ -38,7 +38,7 @@ jobs:
         os: [windows-2022, windows-2019, windows-2016]
         arch: [Win32, x64]
         type: [Debug, Release]
-   steps:
+    steps:
     - name: configure
       run: cmake -A ${{ matrix.arch }} -S . -B build -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
 
