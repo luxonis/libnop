@@ -225,7 +225,7 @@ TEST(Result, Constructor) {
     EXPECT_TRUE(result.has_error());
     EXPECT_EQ(TestError::ErrorA, result.error());
     EXPECT_FALSE(result.has_value());
-    EXPECT_EQ(nullptr, &result.get());
+    EXPECT_EQ(0, &result.get());
   }
 
   {
@@ -361,12 +361,12 @@ TEST(Result, Assignment) {
     EXPECT_TRUE(result.has_error());
     EXPECT_EQ(TestError::ErrorA, result.error());
     EXPECT_FALSE(result.has_value());
-    EXPECT_EQ(nullptr, &result.get());
+    EXPECT_EQ(0, &result.get());
 
     EXPECT_FALSE(error.has_error());
     EXPECT_EQ(TestError::None, error.error());
     EXPECT_FALSE(error.has_value());
-    EXPECT_EQ(nullptr, &error.get());
+    EXPECT_EQ(0, &error.get());
   }
 }
 
