@@ -3440,7 +3440,9 @@ TEST(Deserializer, String) {
     ASSERT_TRUE(status);
 
     std::u16string expected = u"abcdefg";
-    EXPECT_EQ(expected, value);
+    // Wordaround for check issue
+    // EXPECT_EQ(expected, value);
+    ASSERT_TRUE(expected == value);
   }
 }
 

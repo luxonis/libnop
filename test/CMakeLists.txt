@@ -7,25 +7,53 @@ if(MSVC)
 endif()
 find_package(GMock REQUIRED)
 
-# Helper 'nop_add_test'
-macro(nop_add_test test_name test_src)
-    # Add regular test
-    add_executable(${test_name} ${test_src})
-    target_link_libraries(${test_name} ${TARGET_NAME} GTest::Main GTest::GTest GMock::GMock)
-    add_test(${test_name} ${test_name})
-    
-    # Check if MSVC and add a conforming preprocessor test (serialization macros)
-    if (MSVC)
-        add_executable(${test_name}_conforming ${test_src})
-        target_link_libraries(${test_name}_conforming ${TARGET_NAME} GTest::Main GTest::GTest GMock::GMock)
-        if(MSVC_VERSION LESS 1925)
-            target_compile_options(${test_name}_conforming INTERFACE "/experimental:preprocessor")
-        else()
-            target_compile_options(${test_name}_conforming INTERFACE "/Zc:preprocessor")
-        endif()
-        add_test(${test_name}_conforming ${test_name}_conforming)
+# Include checks for C++ supported standards
+include(CxxSupport)
+
+# Specify which standards to test against
+set(CHECK_TEST_CXX_STANDARDS 14 17 20 23)
+foreach(cxx_std ${CHECK_TEST_CXX_STANDARDS})
+    # Check if standard available by compiler
+    if(COMPILER_SUPPORTS_CXX${cxx_std})
+        list(APPEND TEST_CXX_STANDARDS ${cxx_std})
+    else()
+        message(STATUS "Tests - skipping C++ standard ${cxx_std}; no compiler support")
+        continue()
     endif()
-endmacro()
+endforeach()
+
+# Helper 'nop_add_test'
+function(nop_add_test test_name test_src)
+
+    foreach(cxx_std ${TEST_CXX_STANDARDS})
+
+        set(test_name_cxx "${test_name}_c++${cxx_std}")
+
+        # Add regular test
+        add_executable(${test_name_cxx} ${test_src})
+        target_link_libraries(${test_name_cxx} ${TARGET_NAME} GTest::Main GTest::GTest GMock::GMock)
+        add_test(${test_name_cxx} ${test_name_cxx})
+
+        # Set compiler c++ standard, and disables extensions (g++)
+        set_property(TARGET ${test_name_cxx} PROPERTY CXX_STANDARD ${cxx_std})
+        set_property(TARGET ${test_name_cxx} PROPERTY CXX_STANDARD_REQUIRED ON)
+        set_property(TARGET ${test_name_cxx} PROPERTY CXX_EXTENSIONS OFF)
+
+        # Check if MSVC and add a conforming preprocessor test (serialization macros)
+        if (MSVC)
+            add_executable(${test_name_cxx}_conforming ${test_src})
+            target_link_libraries(${test_name_cxx}_conforming ${TARGET_NAME} GTest::Main GTest::GTest GMock::GMock)
+            if(MSVC_VERSION LESS 1925)
+                target_compile_options(${test_name_cxx}_conforming INTERFACE "/experimental:preprocessor")
+            else()
+                target_compile_options(${test_name_cxx}_conforming INTERFACE "/Zc:preprocessor")
+            endif()
+            add_test(${test_name_cxx}_conforming ${test_name_cxx}_conforming)
+        endif()
+
+    endforeach()
+
+endfunction()
 
 # Tests
 nop_add_test(encoding_tests encoding_tests.cpp)

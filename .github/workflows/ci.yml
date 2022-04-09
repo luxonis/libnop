@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+
+  build-and-test-ubuntu-macos:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        type: [Debug, Release]
+    steps:
+    - name: configure
+      run: cmake -S . -B build -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
+
+    - name: build
+      run: cmake --build build --parallel 8
+
+    - name: test
+      run: |
+        cd build
+        ctest
+
+  build-and-test-windows:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2022, windows-2019, windows-2016]
+        arch: [Win32, x64]
+        type: [Debug, Release]
+   steps:
+    - name: configure
+      run: cmake -A ${{ matrix.arch }} -S . -B build -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
+
+    - name: build
+      run: cmake --build build --parallel 8
+
+    - name: test
+      run: |
+        cd build
+        ctest -C ${{ matrix.type }}
