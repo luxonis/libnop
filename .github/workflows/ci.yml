@@ -13,25 +13,29 @@ on:
 
 jobs:
 
-  build-and-test-ubuntu-macos:
+  ubuntu-macos:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
         type: [Debug, Release]
     steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
     - name: configure
-      run: cmake -S . -B build -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
+      run: cmake -S . -B out -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
 
     - name: build
-      run: cmake --build build --parallel 8
+      run: cmake --build out --parallel 8
 
     - name: test
       run: |
-        cd build
+        cd out
         ctest
 
-  build-and-test-windows:
+  windows:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -39,13 +43,17 @@ jobs:
         arch: [Win32, x64]
         type: [Debug, Release]
     steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
     - name: configure
-      run: cmake -A ${{ matrix.arch }} -S . -B build -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
+      run: cmake -A ${{ matrix.arch }} -S . -B out -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
 
     - name: build
-      run: cmake --build build --parallel 8
+      run: cmake --build out --parallel 8
 
     - name: test
       run: |
-        cd build
+        cd out
         ctest -C ${{ matrix.type }}
