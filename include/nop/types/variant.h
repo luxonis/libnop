@@ -291,14 +291,14 @@ struct IfAnyOf {
   template <typename Op, typename... Types>
   static bool Call(Variant<Types...>* variant, Op&& op) {
     static_assert(
-        detail::Set<Types...>::NOP_TEMPLATE IsSubset<ValidTypes...>::value,
+        detail::Set<Types...>::template IsSubset<ValidTypes...>::value,
         "ValidTypes may only contain element types from the Variant.");
     return variant->Visit(CallOp<Op>{std::forward<Op>(op)});
   }
   template <typename Op, typename... Types>
   static bool Call(const Variant<Types...>* variant, Op&& op) {
     static_assert(
-        detail::Set<Types...>::NOP_TEMPLATE IsSubset<ValidTypes...>::value,
+        detail::Set<Types...>::template IsSubset<ValidTypes...>::value,
         "ValidTypes may only contain element types from the Variant.");
     return variant->Visit(CallOp<Op>{std::forward<Op>(op)});
   }

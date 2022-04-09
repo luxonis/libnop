@@ -48,10 +48,10 @@ jobs:
         submodules: 'recursive'
 
     - name: configure
-      run: cmake -A ${{ matrix.arch }} -S . -B out -D LIBNOP_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=${{ matrix.type }}
+      run: cmake -A ${{ matrix.arch }} -S . -B out -D LIBNOP_BUILD_TESTS=ON
 
     - name: build
-      run: cmake --build out --parallel 8
+      run: cmake --build out --parallel 8 --config ${{ matrix.type }}
 
     - name: test
       run: |
