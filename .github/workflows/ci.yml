@@ -33,7 +33,7 @@ jobs:
     - name: test
       run: |
         cd out
-        ctest
+        ctest --output-on-failure
 
   windows:
     runs-on: ${{ matrix.os }}
@@ -56,4 +56,4 @@ jobs:
     - name: test
       run: |
         cd out
-        ctest -C ${{ matrix.type }}
+        ctest -C ${{ matrix.type }} --output-on-failure

@@ -31,7 +31,7 @@
 // MSVC case
 #define NOP_FALLTHROUGH
 #define NOP_GNU_USED
-#define NOP_TEMPLATE
+#define NOP_TEMPLATE template
 
 #else
 
