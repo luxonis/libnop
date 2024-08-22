@@ -239,7 +239,7 @@ class Variant {
   // resulting type.
   template <typename... Args>
   void Construct(Args&&... args) {
-    index_ = value_.NOP_TEMPLATE Construct(std::forward<Args>(args)...);
+    index_ = value_.template Construct(std::forward<Args>(args)...);
   }
   void Construct(EmptyVariant) {}
 
@@ -256,14 +256,14 @@ class Variant {
   // multiple element types.
   template <typename T, typename U>
   void Assign(TypeTag<T>, U&& value) {
-    if (!value_.NOP_TEMPLATE Assign(TypeTag<T>{}, index_, std::forward<U>(value))) {
+    if (!value_.template Assign(TypeTag<T>{}, index_, std::forward<U>(value))) {
       Destruct();
       Construct(TypeTag<T>{}, std::forward<U>(value));
     }
   }
   template <typename T>
   void Assign(T&& value) {
-    if (!value_.NOP_TEMPLATE Assign(index_, std::forward<T>(value))) {
+    if (!value_.template Assign(index_, std::forward<T>(value))) {
       Destruct();
       Construct(std::forward<T>(value));
     }
@@ -357,30 +357,30 @@ namespace std {
 
 template <typename T, typename... Types>
 inline T& get(::nop::Variant<Types...>& v) {
-  return *v.NOP_TEMPLATE get<T>();
+  return *v.template get<T>();
 }
 template <typename T, typename... Types>
 inline T&& get(::nop::Variant<Types...>&& v) {
-  return std::move(*v.NOP_TEMPLATE get<T>());
+  return std::move(*v.template get<T>());
 }
 template <typename T, typename... Types>
 inline const T& get(const ::nop::Variant<Types...>& v) {
-  return *v.NOP_TEMPLATE get<T>();
+  return *v.template get<T>();
 }
 template <std::size_t I, typename... Types>
 inline ::nop::detail::TypeForIndex<I, Types...>& get(
     ::nop::Variant<Types...>& v) {
-  return *v.NOP_TEMPLATE get<I>();
+  return *v.template get<I>();
 }
 template <std::size_t I, typename... Types>
 inline ::nop::detail::TypeForIndex<I, Types...>&& get(
     ::nop::Variant<Types...>&& v) {
-  return std::move(*v.NOP_TEMPLATE get<I>());
+  return std::move(*v.template get<I>());
 }
 template <std::size_t I, typename... Types>
 inline const ::nop::detail::TypeForIndex<I, Types...>& get(
     const ::nop::Variant<Types...>& v) {
-  return *v.NOP_TEMPLATE get<I>();
+  return *v.template get<I>();
 }
 
 }  // namespace std
