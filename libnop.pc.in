@@ -1,0 +1,7 @@
+prefix=@prefix@
+includedir=@includedir@
+
+Name: libnop
+Description: Header-only C++ Native Object Protocols library
+Version: @version@
+Cflags: -I${includedir}
