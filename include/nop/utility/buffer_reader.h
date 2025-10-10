@@ -61,8 +61,10 @@ class BufferReader {
     const std::size_t length = end - begin;
     const std::size_t length_bytes = length * element_size;
 
-    std::memcpy(begin, &buffer_[index_], length_bytes);
-    index_ += length_bytes;
+    if (length_bytes > 0) {
+      std::memcpy(begin, &buffer_[index_], length_bytes);
+      index_ += length_bytes;
+    }
     return {};
   }
 
