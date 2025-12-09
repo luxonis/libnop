@@ -57,8 +57,14 @@ struct Encoding<T, EnableIfEnum<T>> : EncodingIO<T> {
   template <typename Reader>
   static constexpr Status<void> ReadPayload(EncodingByte prefix, T* value,
                                             Reader* reader) {
-    return Encoding<IntegerType>::ReadPayload(
-        prefix, reinterpret_cast<IntegerType*>(value), reader);
+    IntegerType temp{};
+    auto status =
+        Encoding<IntegerType>::ReadPayload(prefix, &temp, reader);
+    if (!status)
+      return status;
+
+    *value = static_cast<T>(temp);  // avoid strict-aliasing UB
+    return {};
   }
 
  private:
