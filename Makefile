@@ -1,5 +1,7 @@
 what_to_build:: all
 
+VERSION ?= 0-unstable-2022-09-04
+
 -include local.mk
 
 TOOLCHAIN ?=
@@ -16,6 +18,12 @@ GTEST_INCLUDE ?= $(GTEST_INSTALL)/include
 HOST_CFLAGS := -g -O2 -Wall -Werror -Wextra -Iinclude
 HOST_CXXFLAGS := -std=c++14
 HOST_LDFLAGS :=
+
+# Define install locations in the system
+INSTALL_PREFIX ?= /usr/local
+INCLUDE_INSTALL_DIR ?= $(INSTALL_PREFIX)/include/
+PKGCONFIG_INSTALL_DIR ?= $(INSTALL_PREFIX)/lib/pkgconfig
+CMAKE_CONFIG_INSTALL_DIR ?= $(INSTALL_PREFIX)/lib/cmake/libnop
 
 ifeq ($(HOST_OS),Linux)
 HOST_LDFLAGS := -lpthread
@@ -138,3 +146,39 @@ all:: $(ALL)
 # we generate .d as a side-effect of compiling. override generic rule:
 %.d:
 -include $(DEPS)
+
+# Handle install into the system
+.PHONY: install install-pkgconfig install-cmake
+
+install: install-headers install-pkgconfig install-cmake
+
+install-headers:
+	@echo "Installing headers to $(INCLUDE_INSTALL_DIR)"
+	mkdir -p $(INCLUDE_INSTALL_DIR)
+	cp -r include/* $(INCLUDE_INSTALL_DIR)
+
+install-pkgconfig: $(OUT)/libnop.pc
+	@echo "Installing pkg-config file to $(PKGCONFIG_INSTALL_DIR)"
+	mkdir -p $(PKGCONFIG_INSTALL_DIR)
+	cp $< $(PKGCONFIG_INSTALL_DIR)
+
+PC_TEMPLATE := libnop.pc.in
+
+$(OUT)/libnop.pc: $(PC_TEMPLATE)
+	mkdir -p $(dir $@)
+	sed \
+		-e 's|@prefix@|$(INSTALL_PREFIX)|g' \
+		-e 's|@includedir@|$(INSTALL_PREFIX)/include|g' \
+		-e 's|@version@|$(VERSION)|g' \
+		$< > $@
+
+install-cmake: $(OUT)/libnopConfig.cmake
+	@echo "Installing CMake config to $(CMAKE_CONFIG_INSTALL_DIR)"
+	mkdir -p $(CMAKE_CONFIG_INSTALL_DIR)
+	cp $< $(CMAKE_CONFIG_INSTALL_DIR)
+
+$(OUT)/libnopConfig.cmake:
+	mkdir -p $(dir $@)
+	echo "set(LIBNOP_INCLUDE_DIR \"$(INCLUDE_INSTALL_DIR)\")" > $@
+	echo "set(LIBNOP_FOUND TRUE)" >> $@
+	echo "mark_as_advanced(LIBNOP_INCLUDE_DIR)" >> $@
